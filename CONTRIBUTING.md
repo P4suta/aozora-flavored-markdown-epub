@@ -1,0 +1,54 @@
+# Contributing to afm-epub
+
+Thank you for considering a contribution.
+
+## Licence agreement
+
+By submitting a contribution to this repository you agree that your
+contribution is offered under the project's dual licence — Apache-2.0 OR
+MIT, at the user's option.
+
+## Issues vs discussions
+
+- Use **Issues** for confirmed bugs, regressions, or concrete feature
+  proposals.
+- Use **Discussions** for open-ended questions and design ideas.
+
+Security issues do not go in either — see [`SECURITY.md`](./SECURITY.md).
+
+## Local development
+
+This repository is **Docker-only** (ADR-0002). Host toolchain
+invocations (`cargo test`, `cargo run`, …) are forbidden in
+automation; use the `just` targets.
+
+```sh
+docker compose build dev      # ~5 min first time, cached after
+just test                     # cargo nextest run --workspace
+just lint                     # fmt-check + clippy + typos + strict-code
+just example                  # render examples/sample/ → out/sample.epub
+just validate out/sample.epub # invoke epubcheck against the produced file
+```
+
+## Coding conventions
+
+- **Rust 2024 edition.** No nightly features.
+- **`#![forbid(unsafe_code)]`** workspace-wide.
+- **TDD**. Failing test first, then implementation. The same C1
+  branch-coverage discipline used in afm applies here (`just coverage`
+  with `--fail-under-branches 100` on `afm-epub` itself).
+- **No suppressed warnings.** `dead_code = "deny"`; `just lint`
+  forbids `#[allow(...)]` outside of vendor code.
+
+## Conventional Commits
+
+Allowed scopes correspond to the workspace crates and major
+sub-systems: `epub`, `cli`, `opf`, `nav`, `xhtml`, `css`, `package`,
+`xtask`, `docs`, `ci`.
+
+## Pull request gates
+
+- `just lint && just test && just coverage` all green.
+- For any output-shape change, an `examples/sample/` golden snapshot
+  is updated and reviewed.
+- README and any touched ADR are updated in the same PR.

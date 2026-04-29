@@ -1,0 +1,38 @@
+# Rust
+/target
+/crates/*/target
+**/*.rs.bk
+
+# Cargo
+Cargo.lock.bak
+/.cargo/
+
+# EPUB build artefacts
+/out/
+
+# Coverage
+/coverage/
+*.profraw
+*.profdata
+lcov.info
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Local env overrides
+.env
+.env.local
+/docker-compose.override.yml
+
+# Ad-hoc scratch files
+.tmp-*
+
+# macOS junk in WSL mounts
+:2e*

@@ -1,0 +1,26 @@
+[package]
+name          = "afm-epub-cli"
+version       = { workspace = true }
+edition       = { workspace = true }
+rust-version  = { workspace = true }
+license       = { workspace = true }
+description   = "CLI front-end for the afm-epub library"
+repository    = { workspace = true }
+homepage      = { workspace = true }
+authors       = { workspace = true }
+readme        = "README.md"
+keywords      = { workspace = true }
+categories    = ["command-line-utilities"]
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "afm-epub"
+path = "src/main.rs"
+
+[dependencies]
+afm-epub  = { path = "../afm-epub" }
+clap      = { workspace = true }
+miette    = { workspace = true }
+anyhow    = { workspace = true }

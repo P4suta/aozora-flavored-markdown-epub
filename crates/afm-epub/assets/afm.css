@@ -1,0 +1,42 @@
+/*
+ * Default afm-epub stylesheet. Mirrors the class catalogue emitted by
+ * afm's HTML renderer; reading-system support varies, so per-EPUB
+ * overrides may be useful (provide via metadata.extra_css later).
+ */
+
+html, body {
+  font-family: "Noto Serif JP", "Yu Mincho", "Hiragino Mincho Pro", serif;
+  line-height: 1.8;
+}
+
+ruby rt {
+  font-size: 0.5em;
+  line-height: 1;
+}
+
+.afm-bouten {
+  text-emphasis-style: var(--afm-bouten-style, "sesame");
+  text-emphasis-position: var(--afm-bouten-position, "over right");
+}
+
+.afm-tcy {
+  -webkit-text-combine: horizontal;
+  text-combine-upright: all;
+}
+
+.afm-indent-2 { padding-inline-start: 2em; }
+.afm-indent-4 { padding-inline-start: 4em; }
+
+.afm-page-break { break-after: page; }
+
+.afm--horizontal { writing-mode: horizontal-tb; }
+.afm--horizontal .afm-tcy { text-combine-upright: none; }
+
+.afm--vertical {
+  writing-mode: vertical-rl;
+  text-orientation: upright;
+  font-feature-settings: "vert", "vrt2";
+}
+.afm--vertical .afm-bouten {
+  text-emphasis-position: var(--afm-bouten-position, "right");
+}

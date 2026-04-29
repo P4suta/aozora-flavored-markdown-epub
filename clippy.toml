@@ -1,0 +1,6 @@
+# Tighter than clippy's defaults — see feedback_minimal_surface_area.
+too-many-arguments-threshold   = 4
+too-many-lines-threshold       = 80
+cognitive-complexity-threshold = 18
+max-fn-params-bools            = 1
+pass-by-value-size-limit       = 128

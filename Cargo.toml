@@ -1,0 +1,80 @@
+[workspace]
+resolver = "3"
+members  = [
+    "crates/afm-epub",
+    "crates/afm-epub-cli",
+    "crates/xtask",
+]
+
+[workspace.package]
+version       = "0.1.0"
+edition       = "2024"
+rust-version  = "1.95.0"
+license       = "Apache-2.0 OR MIT"
+description   = "EPUB3 generator for Aozora Flavored Markdown (afm)"
+repository    = "https://github.com/P4suta/afm-epub"
+homepage      = "https://github.com/P4suta/afm-epub"
+authors       = ["afm-epub contributors"]
+readme        = "README.md"
+keywords      = ["epub", "epub3", "markdown", "aozora", "japanese"]
+categories    = ["text-processing", "command-line-utilities"]
+
+[workspace.lints.rust]
+unsafe_code      = "forbid"
+non_ascii_idents = "deny"
+
+missing_debug_implementations = "warn"
+missing_copy_implementations  = "warn"
+trivial_casts                 = "warn"
+trivial_numeric_casts         = "warn"
+unused_import_braces          = "warn"
+dead_code                     = "deny"
+
+[workspace.lints.clippy]
+pedantic         = { level = "warn", priority = -1 }
+nursery          = { level = "warn", priority = -1 }
+cargo            = { level = "warn", priority = -1 }
+# Project-tightened individual lints
+cognitive_complexity = "warn"
+too_many_arguments   = "warn"
+too_many_lines       = "warn"
+
+[workspace.dependencies]
+# afm-markdown — the Markdown-dialect glue layer that owns
+# `render_to_string(input, &options) -> Rendered { html, diagnostics }`.
+# afm-epub consumes that single entry point to turn each manuscript
+# source into an HTML body before wrapping it in the XHTML envelope.
+#
+# afm v0.2.4 collapsed the historical owned-AST split (`afm-syntax` /
+# `afm-parser` / `afm-encoding`) into the single `afm-markdown` crate
+# above; the standalone Aozora parser now lives in `P4suta/aozora` and
+# is consumed transitively. Iterate locally with the
+# `[patch."https://github.com/P4suta/afm"]` block at the bottom.
+afm-markdown    = { git = "https://github.com/P4suta/afm.git", tag = "v0.2.4" }
+# `aozora-encoding` is needed separately for SJIS handling on the
+# input side — afm-markdown does not re-export it (no need to: a
+# Markdown-only consumer expects UTF-8).
+aozora-encoding = { version = "0.2.5", git = "https://github.com/P4suta/aozora.git", tag = "v0.2.5" }
+
+# CLI
+clap      = { version = "4", features = ["derive", "wrap_help"] }
+anyhow    = "1"
+miette    = { version = "7", features = ["fancy"] }
+thiserror = "2"
+serde     = { version = "1", features = ["derive"] }
+toml      = "0.9"
+
+# EPUB output
+quick-xml = { version = "0.39", features = ["serialize"] }
+zip       = { version = "5", default-features = false, features = ["deflate"] }
+uuid      = { version = "1", features = ["v4"] }
+chrono    = { version = "0.4", features = ["serde"] }
+
+# Tests
+pretty_assertions = "1"
+insta             = { version = "1", features = ["yaml", "ron", "filters"] }
+proptest          = "1"
+
+# Local-iteration patch: uncomment to point at a sibling working copy.
+# [patch."https://github.com/P4suta/afm"]
+# afm-markdown = { path = "../afm/crates/afm-markdown" }

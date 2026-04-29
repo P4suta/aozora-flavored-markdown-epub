@@ -1,0 +1,46 @@
+# afm-epub Justfile
+# Docker-only execution (ADR-0002). 全てのコマンドは
+# `docker compose run --rm dev <…>` を経由する。
+
+set shell := ["bash", "-uc"]
+
+# 開発コンテナ shorthand
+_dev := "docker compose run --rm dev"
+
+default:
+    @just --list --unsorted
+
+build:
+    {{_dev}} cargo build --workspace --all-targets
+
+test:
+    {{_dev}} cargo nextest run --workspace
+
+# fmt + clippy + typos + workspace lint
+lint:
+    {{_dev}} cargo fmt --all -- --check
+    {{_dev}} cargo clippy --workspace --all-targets -- -D warnings
+    {{_dev}} typos
+
+coverage:
+    {{_dev}} cargo llvm-cov --workspace --branch --fail-under-branches 100
+
+# example: ローカル fixture から EPUB を生成
+example:
+    {{_dev}} cargo run --release -p afm-epub-cli -- \
+        build --input examples/sample/manuscript --metadata examples/sample/book.toml --output out/sample.epub
+
+# 生成済み EPUB を epubcheck で検証
+validate path:
+    {{_dev}} epubcheck {{path}}
+
+# CI のフルパイプラインを再現
+ci: lint test coverage
+
+# lefthook フック設定 (host にインストール済みの lefthook を使う)
+hooks:
+    lefthook install
+
+# Dependency advisory + license check
+deny:
+    {{_dev}} cargo deny check

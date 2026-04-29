@@ -1,0 +1,13 @@
+# Defaults: everything is text, normalised to LF in the repo.
+* text=auto eol=lf
+
+# License / notice text files must stay LF even on Windows checkouts.
+LICENSE-*                  text eol=lf
+NOTICE                     text eol=lf
+
+# EPUB binary fixtures.
+spec/fixtures/**/*.epub    binary
+spec/fixtures/**/*.zip     binary
+
+# Aozora Bunko Shift_JIS fixtures, if any are reused for tests.
+spec/fixtures/**/*.txt     binary

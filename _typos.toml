@@ -1,0 +1,23 @@
+[default]
+extend-ignore-identifiers-re = [
+    "[A-Fa-f0-9]{7,}",
+]
+
+[default.extend-words]
+afm        = "afm"
+epub       = "epub"
+xhtml      = "xhtml"
+opf        = "opf"
+ncx        = "ncx"
+P4suta     = "P4suta"
+Yasunobu   = "Yasunobu"
+
+[files]
+extend-exclude = [
+    "target/",
+    "out/",
+    "coverage/",
+    "*.lock",
+    "*.epub",
+    "*.zip",
+]
