@@ -14,13 +14,13 @@ use crate::{BuildOptions, Error, Result};
 #[derive(Debug, Clone)]
 pub struct Manuscript {
     pub metadata: Metadata,
-    pub sources:  Vec<SourceFile>,
+    pub sources: Vec<SourceFile>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Metadata {
-    pub title:    String,
-    pub creator:  String,
+    pub title: String,
+    pub creator: String,
     pub language: String,
     #[serde(default)]
     pub identifier: Option<String>,
@@ -41,17 +41,16 @@ const fn default_mode() -> WritingMode {
 
 #[derive(Debug, Clone)]
 pub struct SourceFile {
-    pub path:  PathBuf,
+    pub path: PathBuf,
     pub bytes: Vec<u8>,
 }
 
 pub fn collect(opts: &BuildOptions<'_>) -> Result<Manuscript> {
-    let metadata_text = std::fs::read_to_string(opts.metadata).map_err(|source| {
-        Error::DiscoverIo {
+    let metadata_text =
+        std::fs::read_to_string(opts.metadata).map_err(|source| Error::DiscoverIo {
             path: opts.metadata.to_path_buf(),
             source,
-        }
-    })?;
+        })?;
     let metadata: Metadata =
         toml::from_str(&metadata_text).map_err(|source| Error::MetadataParse {
             path: opts.metadata.to_path_buf(),

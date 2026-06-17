@@ -74,7 +74,7 @@ pub struct BuildOptions<'a> {
 /// spans where applicable (`miette::Report`).
 pub fn build(opts: &BuildOptions<'_>) -> Result<()> {
     let manuscript = discover::collect(opts)?;
-    let rendered   = render::render_all(&manuscript)?;
-    let bundle     = compose::compose(&manuscript, &rendered)?;
+    let rendered = render::render_all(&manuscript)?;
+    let bundle = compose::compose(&manuscript, &rendered)?;
     package::write(opts.output, &bundle)
 }

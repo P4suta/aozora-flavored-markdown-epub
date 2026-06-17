@@ -9,10 +9,8 @@
 
 use afm_markdown::{Options, render_to_string};
 
-use crate::{
-    Error, Result,
-    discover::{Manuscript, WritingMode},
-};
+use crate::discover::{Manuscript, WritingMode};
+use crate::{Error, Result};
 
 #[derive(Debug, Clone)]
 pub struct SpineItem {
