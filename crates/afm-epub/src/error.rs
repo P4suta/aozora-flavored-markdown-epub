@@ -43,10 +43,7 @@ pub enum Error {
 
     #[error("metadata field {field:?} is invalid: {reason}")]
     #[diagnostic(code(afm_epub::compose::metadata))]
-    MetadataInvalid {
-        field: &'static str,
-        reason: String,
-    },
+    MetadataInvalid { field: &'static str, reason: String },
 
     #[error("failed to build XML for the EPUB scaffolding: {0}")]
     #[diagnostic(code(afm_epub::compose::xml))]

@@ -20,7 +20,7 @@ name = "afm-epub"
 path = "src/main.rs"
 
 [dependencies]
-afm-epub  = { path = "../afm-epub" }
+afm-epub  = { version = "0.1.0", path = "../afm-epub" }
 clap      = { workspace = true }
 miette    = { workspace = true }
 anyhow    = { workspace = true }

@@ -43,9 +43,9 @@ fn main() -> miette::Result<()> {
             metadata,
             output,
         } => afm_epub::build(&afm_epub::BuildOptions {
-            input:    &input,
+            input: &input,
             metadata: &metadata,
-            output:   &output,
+            output: &output,
         })?,
     }
     Ok(())

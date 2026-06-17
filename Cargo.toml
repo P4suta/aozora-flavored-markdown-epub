@@ -50,11 +50,14 @@ too_many_lines       = "warn"
 # above; the standalone Aozora parser now lives in `P4suta/aozora` and
 # is consumed transitively. Iterate locally with the
 # `[patch."https://github.com/P4suta/afm"]` block at the bottom.
-afm-markdown    = { git = "https://github.com/P4suta/afm.git", tag = "v0.3.0" }
+# Pinned to the afm `main` commit that tracks aozora v0.4.1, so afm-epub's
+# direct aozora-encoding pin and afm-markdown's transitive aozora pin stay
+# on the same version (no split). Bump the rev on an intentional afm sync.
+afm-markdown    = { version = "0.4.0", git = "https://github.com/P4suta/afm.git", rev = "bedbec125a3af4452d102393d4acf8223aa7d0a2" }
 # `aozora-encoding` is needed separately for SJIS handling on the
 # input side — afm-markdown does not re-export it (no need to: a
 # Markdown-only consumer expects UTF-8).
-aozora-encoding = { version = "0.2.6", git = "https://github.com/P4suta/aozora.git", tag = "v0.2.6" }
+aozora-encoding = { version = "0.4.1", git = "https://github.com/P4suta/aozora.git", rev = "a53c632b1d1be4bfcbce7de010ab5b0843e98cc0" }
 
 # CLI
 clap      = { version = "4", features = ["derive", "wrap_help"] }

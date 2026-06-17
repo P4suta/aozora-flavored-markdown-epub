@@ -24,7 +24,8 @@ use std::path::Path;
 
 use zip::write::{SimpleFileOptions, ZipWriter};
 
-use crate::{Error, Result, compose::Bundle};
+use crate::compose::Bundle;
+use crate::{Error, Result};
 
 pub fn write(out: &Path, bundle: &Bundle) -> Result<()> {
     if let Some(parent) = out.parent() {
@@ -40,9 +41,24 @@ pub fn write(out: &Path, bundle: &Bundle) -> Result<()> {
     let mut zip = ZipWriter::new(BufWriter::new(file));
 
     write_stored(&mut zip, "mimetype", bundle.mimetype.as_bytes(), out)?;
-    write_deflated(&mut zip, "META-INF/container.xml", bundle.container.as_bytes(), out)?;
-    write_deflated(&mut zip, "OEBPS/package.opf", bundle.package_opf.as_bytes(), out)?;
-    write_deflated(&mut zip, "OEBPS/nav.xhtml", bundle.nav_xhtml.as_bytes(), out)?;
+    write_deflated(
+        &mut zip,
+        "META-INF/container.xml",
+        bundle.container.as_bytes(),
+        out,
+    )?;
+    write_deflated(
+        &mut zip,
+        "OEBPS/package.opf",
+        bundle.package_opf.as_bytes(),
+        out,
+    )?;
+    write_deflated(
+        &mut zip,
+        "OEBPS/nav.xhtml",
+        bundle.nav_xhtml.as_bytes(),
+        out,
+    )?;
     for asset in &bundle.assets {
         write_deflated(&mut zip, &asset.path, &asset.contents, out)?;
     }
@@ -62,12 +78,13 @@ fn write_stored<W: Write + Seek>(
     bytes: &[u8],
     out_path: &Path,
 ) -> Result<()> {
-    let opts: SimpleFileOptions = SimpleFileOptions::default()
-        .compression_method(zip::CompressionMethod::Stored);
-    zip.start_file(name, opts).map_err(|source| Error::Package {
-        path: out_path.to_path_buf(),
-        source,
-    })?;
+    let opts: SimpleFileOptions =
+        SimpleFileOptions::default().compression_method(zip::CompressionMethod::Stored);
+    zip.start_file(name, opts)
+        .map_err(|source| Error::Package {
+            path: out_path.to_path_buf(),
+            source,
+        })?;
     zip.write_all(bytes).map_err(|source| Error::PackageIo {
         path: out_path.to_path_buf(),
         source,
@@ -81,12 +98,13 @@ fn write_deflated<W: Write + Seek>(
     bytes: &[u8],
     out_path: &Path,
 ) -> Result<()> {
-    let opts: SimpleFileOptions = SimpleFileOptions::default()
-        .compression_method(zip::CompressionMethod::Deflated);
-    zip.start_file(name, opts).map_err(|source| Error::Package {
-        path: out_path.to_path_buf(),
-        source,
-    })?;
+    let opts: SimpleFileOptions =
+        SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+    zip.start_file(name, opts)
+        .map_err(|source| Error::Package {
+            path: out_path.to_path_buf(),
+            source,
+        })?;
     zip.write_all(bytes).map_err(|source| Error::PackageIo {
         path: out_path.to_path_buf(),
         source,

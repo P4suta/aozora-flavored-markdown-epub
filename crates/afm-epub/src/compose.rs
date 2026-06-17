@@ -55,7 +55,9 @@ use quick_xml::events::{BytesDecl, BytesEnd, BytesStart, BytesText, Event};
 use quick_xml::writer::Writer;
 use uuid::Uuid;
 
-use crate::{Error, Result, discover::Manuscript, render::RenderOutput};
+use crate::discover::Manuscript;
+use crate::render::RenderOutput;
+use crate::{Error, Result};
 
 /// Files to write into the EPUB ZIP, in their canonical order.
 #[derive(Debug, Clone)]
@@ -176,13 +178,15 @@ fn container_xml() -> Result<String> {
     let mut container = BytesStart::new("container");
     container.push_attribute(("version", "1.0"));
     container.push_attribute(("xmlns", "urn:oasis:names:tc:opendocument:xmlns:container"));
-    w.write_event(Event::Start(container)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(container))
+        .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::Start(BytesStart::new("rootfiles")))
         .map_err(|e| xml_to_err(&e))?;
     let mut rf = BytesStart::new("rootfile");
     rf.push_attribute(("full-path", "OEBPS/package.opf"));
     rf.push_attribute(("media-type", "application/oebps-package+xml"));
-    w.write_event(Event::Empty(rf)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Empty(rf))
+        .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::End(BytesEnd::new("rootfiles")))
         .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::End(BytesEnd::new("container")))
@@ -205,12 +209,14 @@ fn package_opf(
     package.push_attribute(("version", "3.0"));
     package.push_attribute(("unique-identifier", "bookid"));
     package.push_attribute(("xml:lang", meta.language.as_str()));
-    w.write_event(Event::Start(package)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(package))
+        .map_err(|e| xml_to_err(&e))?;
 
     // metadata
     let mut metadata = BytesStart::new("metadata");
     metadata.push_attribute(("xmlns:dc", "http://purl.org/dc/elements/1.1/"));
-    w.write_event(Event::Start(metadata)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(metadata))
+        .map_err(|e| xml_to_err(&e))?;
 
     write_dc(&mut w, "dc:identifier", id, &[("id", "bookid")])?;
     write_dc(&mut w, "dc:title", &meta.title, &[])?;
@@ -219,7 +225,8 @@ fn package_opf(
 
     let mut modified = BytesStart::new("meta");
     modified.push_attribute(("property", "dcterms:modified"));
-    w.write_event(Event::Start(modified)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(modified))
+        .map_err(|e| xml_to_err(&e))?;
     let stamp = now.format("%Y-%m-%dT%H:%M:%SZ").to_string();
     w.write_event(Event::Text(BytesText::new(&stamp)))
         .map_err(|e| xml_to_err(&e))?;
@@ -272,7 +279,8 @@ fn package_opf(
         let id = format!("ch{:03}", i + 1);
         let mut idref = BytesStart::new("itemref");
         idref.push_attribute(("idref", id.as_str()));
-        w.write_event(Event::Empty(idref)).map_err(|e| xml_to_err(&e))?;
+        w.write_event(Event::Empty(idref))
+            .map_err(|e| xml_to_err(&e))?;
     }
     w.write_event(Event::End(BytesEnd::new("spine")))
         .map_err(|e| xml_to_err(&e))?;
@@ -293,7 +301,8 @@ fn write_dc<W: std::io::Write>(
     for (k, v) in attrs {
         tag.push_attribute((*k, *v));
     }
-    w.write_event(Event::Start(tag)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(tag))
+        .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::Text(BytesText::new(text)))
         .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::End(BytesEnd::new(name.to_owned())))
@@ -312,10 +321,7 @@ struct ManifestItem<'a> {
     properties: Option<&'a str>,
 }
 
-fn write_manifest_item<W: std::io::Write>(
-    w: &mut Writer<W>,
-    spec: ManifestItem<'_>,
-) -> Result<()> {
+fn write_manifest_item<W: std::io::Write>(w: &mut Writer<W>, spec: ManifestItem<'_>) -> Result<()> {
     let mut item = BytesStart::new("item");
     item.push_attribute(("id", spec.id));
     item.push_attribute(("href", spec.href));
@@ -323,7 +329,8 @@ fn write_manifest_item<W: std::io::Write>(
     if let Some(p) = spec.properties {
         item.push_attribute(("properties", p));
     }
-    w.write_event(Event::Empty(item)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Empty(item))
+        .map_err(|e| xml_to_err(&e))?;
     Ok(())
 }
 
@@ -339,13 +346,15 @@ fn nav_xhtml(meta: &crate::discover::Metadata, rendered: &RenderOutput) -> Resul
     html.push_attribute(("xmlns:epub", "http://www.idpf.org/2007/ops"));
     html.push_attribute(("xml:lang", meta.language.as_str()));
     html.push_attribute(("lang", meta.language.as_str()));
-    w.write_event(Event::Start(html)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(html))
+        .map_err(|e| xml_to_err(&e))?;
 
     w.write_event(Event::Start(BytesStart::new("head")))
         .map_err(|e| xml_to_err(&e))?;
     let mut charset = BytesStart::new("meta");
     charset.push_attribute(("charset", "utf-8"));
-    w.write_event(Event::Empty(charset)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Empty(charset))
+        .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::Start(BytesStart::new("title")))
         .map_err(|e| xml_to_err(&e))?;
     w.write_event(Event::Text(BytesText::new(&meta.title)))
@@ -361,7 +370,8 @@ fn nav_xhtml(meta: &crate::discover::Metadata, rendered: &RenderOutput) -> Resul
     let mut nav = BytesStart::new("nav");
     nav.push_attribute(("epub:type", "toc"));
     nav.push_attribute(("id", "toc"));
-    w.write_event(Event::Start(nav)).map_err(|e| xml_to_err(&e))?;
+    w.write_event(Event::Start(nav))
+        .map_err(|e| xml_to_err(&e))?;
 
     w.write_event(Event::Start(BytesStart::new("h1")))
         .map_err(|e| xml_to_err(&e))?;
@@ -400,7 +410,8 @@ fn nav_xhtml(meta: &crate::discover::Metadata, rendered: &RenderOutput) -> Resul
 
 fn finish_writer(w: Writer<Cursor<Vec<u8>>>) -> Result<String> {
     let bytes = w.into_inner().into_inner();
-    let mut s = String::from_utf8(bytes).map_err(|err| Error::XmlBuild(Cow::Owned(err.to_string())))?;
+    let mut s =
+        String::from_utf8(bytes).map_err(|err| Error::XmlBuild(Cow::Owned(err.to_string())))?;
     if !s.ends_with('\n') {
         s.push('\n');
     }
@@ -463,13 +474,25 @@ mod tests {
     #[test]
     fn validate_metadata_rejects_blank_creator() {
         let err = validate_metadata(&dummy_metadata("Title", "   ", "ja")).unwrap_err();
-        assert!(matches!(err, Error::MetadataInvalid { field: "creator", .. }));
+        assert!(matches!(
+            err,
+            Error::MetadataInvalid {
+                field: "creator",
+                ..
+            }
+        ));
     }
 
     #[test]
     fn validate_metadata_rejects_bad_language() {
         let err = validate_metadata(&dummy_metadata("Title", "Author", "japanese")).unwrap_err();
-        assert!(matches!(err, Error::MetadataInvalid { field: "language", .. }));
+        assert!(matches!(
+            err,
+            Error::MetadataInvalid {
+                field: "language",
+                ..
+            }
+        ));
     }
 
     #[test]
