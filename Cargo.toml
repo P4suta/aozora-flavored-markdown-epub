@@ -78,6 +78,11 @@ pretty_assertions = "1"
 insta             = { version = "1", features = ["yaml", "ron", "filters"] }
 proptest          = "1"
 
+# The profile that 'dist' will build with
+[profile.dist]
+inherits = "release"
+lto = "thin"
+
 # Local-iteration patch: uncomment to point at a sibling working copy.
 # [patch."https://github.com/P4suta/afm"]
 # afm-markdown = { path = "../afm/crates/afm-markdown" }
