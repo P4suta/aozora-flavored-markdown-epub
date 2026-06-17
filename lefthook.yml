@@ -1,0 +1,16 @@
+# lefthook (https://lefthook.dev/) — git hooks for afm-epub.
+# Install:   just hooks   (lefthook install)
+# Tooling is provisioned by mise (mise.toml); run `mise install` first.
+
+pre-commit:
+  parallel: true
+  commands:
+    typos:
+      run: typos
+
+commit-msg:
+  commands:
+    # Conventional Commits via `committed` (config in committed.toml).
+    # `{1}` is lefthook's positional reference to the commit-message file.
+    committed:
+      run: committed --commit-file {1}

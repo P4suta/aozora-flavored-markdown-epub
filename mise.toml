@@ -1,0 +1,12 @@
+# mise (https://mise.jdx.dev/) — declarative source of dev-tool versions
+# for afm-epub. Run `mise install` (or `just hooks` after it) once.
+#
+# afm-epub builds in Docker (epubcheck needs a JVM); this manifest powers
+# the host inner loop and the commit-msg hook. Rust + cargo plugins live
+# in .config/mise/config.toml.
+[tools]
+just = "latest"
+lefthook = "latest"
+"github:crate-ci/typos" = "latest"
+"github:crate-ci/committed" = "latest"
+actionlint = "latest"

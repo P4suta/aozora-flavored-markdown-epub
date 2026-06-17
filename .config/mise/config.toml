@@ -1,0 +1,8 @@
+# Rust toolchain + cargo-built dev tools for host iteration on afm-epub.
+# mise merges this with mise.toml (same directory, tool-level union).
+# The rust version mirrors rust-toolchain.toml.
+[tools]
+rust = "1.95.0"
+"cargo:cargo-nextest" = "latest"
+"cargo:cargo-deny" = "latest"
+"cargo:cargo-llvm-cov" = "latest"
