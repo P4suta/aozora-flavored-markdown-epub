@@ -1,0 +1,33 @@
+# lefthook (https://lefthook.dev/) git hooks for afm-epub.
+#
+# Enable after clone:  `just hooks`
+# Disable:             `just hooks-uninstall`
+#
+# Policy (mirrors the ecosystem baseline):
+# - commit-msg runs on the host — `committed` is provisioned by mise and
+#   a Conventional-Commits lint needs no container.
+# - pre-push is the strict gate and runs inside the dev container via
+#   `just ci` (Docker-only execution, ADR-0002), mirroring the merge gate.
+
+commit-msg:
+  commands:
+    # Conventional Commits via `committed` (config in committed.toml).
+    # `{1}` is the commit-message file path.
+    committed:
+      run: committed --commit-file {1}
+
+pre-push:
+  # Mirror the CI gates that are live today (build = fmt + clippy + test,
+  # plus typos via `just lint`), all in the dev container. The coverage
+  # gate in `just ci` is intentionally NOT run here: afm-epub is pre-alpha
+  # scaffolding and CI defers coverage until the writer phases land, so
+  # pre-push stays in lock-step with the green CI surface. Re-add coverage
+  # here once `just ci`'s coverage gate is reinstated in CI.
+  parallel: false
+  commands:
+    lint:
+      run: just lint
+      fail_text: "`just lint` (fmt/clippy/typos) failed — run it directly."
+    test:
+      run: just test
+      fail_text: "`just test` (nextest) failed — run it directly."

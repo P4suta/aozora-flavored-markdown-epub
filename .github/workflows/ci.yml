@@ -9,6 +9,19 @@ permissions:
   contents: read
 
 jobs:
+  commitlint:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: taiki-e/install-action@v2
+        with:
+          tool: committed
+      - name: Check Conventional Commits (committed)
+        run: committed "${{ github.event.pull_request.base.sha }}..${{ github.event.pull_request.head.sha }}"
+
   build:
     runs-on: ubuntu-latest
     steps:

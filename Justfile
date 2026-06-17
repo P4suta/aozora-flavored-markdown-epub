@@ -41,6 +41,14 @@ ci: lint test coverage
 hooks:
     lefthook install
 
+# lefthook git hook stub を削除
+hooks-uninstall:
+    lefthook uninstall
+
+# 開発ツール一式を mise でプロビジョニング (host inner loop / commit-msg hook)
+setup:
+    mise install
+
 # Dependency advisory + license check
 deny:
     {{_dev}} cargo deny check
