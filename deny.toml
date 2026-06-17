@@ -33,6 +33,11 @@ confidence-threshold = 0.93
 [bans]
 multiple-versions = "warn"
 wildcards         = "deny"
+# Internal workspace path deps (afm-epub-cli -> afm-epub) declare no
+# version, which reads as an implicit `*`. This carve-out exempts those
+# path-only deps from the wildcard ban (the version lives in the member's
+# own [package]). Mirrors the sibling aozora repos.
+allow-wildcard-paths = true
 deny              = []
 
 [sources]
