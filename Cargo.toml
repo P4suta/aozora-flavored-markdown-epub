@@ -38,25 +38,14 @@ cargo            = { level = "warn", priority = -1 }
 cognitive_complexity = "warn"
 too_many_arguments   = "warn"
 too_many_lines       = "warn"
+# Transitive duplicates from the aozora/comrak graph; upstream-driven.
+multiple_crate_versions = "allow"
 
 [workspace.dependencies]
-# afm-markdown — the Markdown-dialect glue layer that owns
-# `render_to_string(input, &options) -> Rendered { html, diagnostics }`.
-# afm-epub consumes that single entry point to turn each manuscript
-# source into an HTML body before wrapping it in the XHTML envelope.
-#
-# afm v0.2.4 collapsed the historical owned-AST split (`afm-syntax` /
-# `afm-parser` / `afm-encoding`) into the single `afm-markdown` crate
-# above; the standalone Aozora parser now lives in `P4suta/aozora` and
-# is consumed transitively. Iterate locally with the
-# `[patch."https://github.com/P4suta/afm"]` block at the bottom.
-# Pinned to the afm `main` commit that tracks aozora v0.4.1, so afm-epub's
-# direct aozora-encoding pin and afm-markdown's transitive aozora pin stay
-# on the same version (no split). Bump the rev on an intentional afm sync.
+# afm-markdown: the single entry point `render_to_string` that turns each
+# manuscript source into HTML. rev is an intentional pin; bump on an afm sync.
 afm-markdown    = { version = "0.4.0", git = "https://github.com/P4suta/afm.git", rev = "bedbec125a3af4452d102393d4acf8223aa7d0a2" }
-# `aozora-encoding` is needed separately for SJIS handling on the
-# input side — afm-markdown does not re-export it (no need to: a
-# Markdown-only consumer expects UTF-8).
+# aozora-encoding: SJIS input decoding; afm-markdown does not re-export it.
 aozora-encoding = { version = "0.4.1", git = "https://github.com/P4suta/aozora.git", rev = "a53c632b1d1be4bfcbce7de010ab5b0843e98cc0" }
 
 # CLI
@@ -83,6 +72,6 @@ proptest          = "1"
 inherits = "release"
 lto = "thin"
 
-# Local-iteration patch: uncomment to point at a sibling working copy.
+# Local dev: uncomment to point at a sibling working copy.
 # [patch."https://github.com/P4suta/afm"]
 # afm-markdown = { path = "../afm/crates/afm-markdown" }

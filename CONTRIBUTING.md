@@ -18,33 +18,30 @@ Security issues do not go in either — see [`SECURITY.md`](./SECURITY.md).
 
 ## Local development
 
-This repository is **Docker-only** (ADR-0002). Host toolchain
-invocations (`cargo test`, `cargo run`, …) are forbidden in
-automation; use the `just` targets.
+**Docker-only** (ADR-0002) — run everything through the `just` targets:
 
 ```sh
-docker compose build dev      # ~5 min first time, cached after
+docker compose build dev
 just test                     # cargo nextest run --workspace
-just lint                     # fmt-check + clippy + typos + strict-code
+just lint                     # fmt --check + clippy -D warnings + typos
 just example                  # render examples/sample/ → out/sample.epub
-just validate out/sample.epub # invoke epubcheck against the produced file
+just validate out/sample.epub # epubcheck the produced file
 ```
 
 ## Coding conventions
 
 - **Rust 2024 edition.** No nightly features.
 - **`#![forbid(unsafe_code)]`** workspace-wide.
-- **TDD**. Failing test first, then implementation. The same C1
-  branch-coverage discipline used in afm applies here (`just coverage`
-  with `--fail-under-branches 100` on `afm-epub` itself).
-- **No suppressed warnings.** `dead_code = "deny"`; `just lint`
-  forbids `#[allow(...)]` outside of vendor code.
+- **TDD**. Failing test first, then implementation; `just coverage`
+  enforces 100% branch coverage.
+- **Warnings are errors** (`-D warnings`, `dead_code = "deny"`). The
+  only lint allowance is workspace-wide `multiple_crate_versions`, for
+  upstream duplicate versions outside our control.
 
 ## Conventional Commits
 
-Allowed scopes correspond to the workspace crates and major
-sub-systems: `epub`, `cli`, `opf`, `nav`, `xhtml`, `css`, `package`,
-`xtask`, `docs`, `ci`.
+Enforced by `committed`. Use the standard types (`feat`, `fix`, `docs`,
+…); scope is free-form — name the crate or subsystem touched.
 
 ## Pull request gates
 
@@ -62,5 +59,4 @@ Releases are automated by [cargo-dist](https://opensource.axo.dev/cargo-dist/)
 `afm-epub` CLI on five targets, packages archives + `shell`/`powershell`
 installers + checksums, and creates the GitHub Release. The config lives
 in `dist-workspace.toml` (`dist generate` after edits); every PR runs a
-`dist plan` dry-run as the `plan` job. No tag is cut while the EPUB writer
-phases are still scaffolding.
+`dist plan` dry-run as the `plan` job.

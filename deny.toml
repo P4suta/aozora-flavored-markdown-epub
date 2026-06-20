@@ -1,7 +1,5 @@
-# cargo-deny configuration.
-# Strategy mirrors afm/aozora: refuse the known-problem dependency
-# graphs (advisories, license incompat, multiple major versions of the
-# same crate) and treat the lockfile as authoritative.
+# cargo-deny: refuse advisories, license incompatibilities, and unknown
+# sources; treat the lockfile as authoritative.
 
 [graph]
 all-features = true
@@ -21,9 +19,7 @@ allow = [
   "BSD-3-Clause",
   "ISC",
   "Unicode-3.0",
-  # finl_unicode (transitive via aozora v0.4.1) is
-  # "(MIT OR Apache-2.0) AND Unicode-DFS-2016".
-  "Unicode-DFS-2016",
+  "Unicode-DFS-2016", # finl_unicode (transitive)
   "MPL-2.0",
   "Zlib",
   "CC0-1.0",

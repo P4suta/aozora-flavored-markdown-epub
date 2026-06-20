@@ -1,13 +1,5 @@
 //! `afm-epub` CLI — thin clap wrapper over the `afm_epub` library.
 
-// Same upstream pipeline duplicates as the library — see
-// `afm_epub` crate-level note for context.
-#![allow(
-    clippy::multiple_crate_versions,
-    reason = "transitive duplicates from aozora / comrak pipeline; \
-              see afm_epub crate-level note"
-)]
-
 use std::path::PathBuf;
 
 use clap::{Parser, Subcommand};

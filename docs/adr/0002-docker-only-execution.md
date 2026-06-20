@@ -7,15 +7,10 @@
 
 ## Context
 
-afm-epub depends on a Rust toolchain, on `afm` library crates pulled
-via git, and on the Java-based `epubcheck` validator. Asking
-contributors to install all three on the host opens the project to the
-familiar "works on my machine" failure mode, especially around
-epubcheck's JRE.
-
-afm itself adopted Docker-only execution as ADR-0002, with the same
-reasoning. Sibling repositories (`aozora`, `aozora-tools`) use the
-same pattern.
+afm-epub needs a Rust toolchain, afm's git-pulled crates, and the
+Java-based `epubcheck` validator. Installing all three on the host
+invites "works on my machine" failures, especially around epubcheck's
+JRE. Sibling repos (afm, aozora) use the same Docker-only pattern.
 
 ## Decision
 
@@ -60,4 +55,3 @@ Harder:
 
 - afm ADR-0002:
   <https://github.com/P4suta/afm/blob/main/docs/adr/0002-docker-only-execution.md>
-- `feedback_docker_only_execution`.

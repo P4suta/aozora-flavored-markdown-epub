@@ -1,17 +1,9 @@
-//! Error type. Uses `thiserror` + `miette` so callers can attach
-//! source spans for diagnostics; the CLI binds the same `Report`
-//! flavour as `afm`.
+//! Error type (`thiserror` + `miette`). Each variant carries enough
+//! context to root-cause without a stack trace (a path for IO, a TOML
+//! span for metadata, the field name for invariant violations) and a
+//! stable diagnostic code `afm_epub::<phase>::<kind>`.
 //!
-//! ## Design
-//!
-//! Each variant carries enough context to root-cause without a
-//! stack trace: a path for IO, a TOML span for metadata, the field
-//! name for invariant violations. We follow `afm`'s diagnostic-code
-//! convention (`afm_epub::<phase>::<kind>`) so external tools can
-//! key on stable strings instead of free-form messages.
-//!
-//! `Error` is `#[non_exhaustive]` — adding a variant is not a
-//! semver break for downstream `match` arms.
+//! `Error` is `#[non_exhaustive]`.
 
 use std::borrow::Cow;
 use std::path::PathBuf;

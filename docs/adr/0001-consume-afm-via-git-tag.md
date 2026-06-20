@@ -14,19 +14,17 @@ afm sources to HTML. Three obvious shapes:
    with comrak (afm ADR-0001).
 2. **Spawn the `afm` CLI** from afm-epub at run time. Mirrors what
    afm-pandoc / afm-zola / afm-hugo do.
-3. **Cargo git dependency, pinned to an afm release tag.** Pull the
-   library crates (`afm-syntax`, `afm-parser`, `afm-encoding`)
-   straight from afm's GitHub repo at a versioned tag.
+3. **Cargo git dependency, pinned to an afm revision.** Pull afm's
+   library crates straight from its GitHub repo at a pinned commit.
 
 afm publishes its v0.1 public surface specifically for sibling
 consumers (afm ADR-0009).
 
 ## Decision
 
-Adopt option 3: depend on afm's library crates via a git tag dep,
-pinned to a specific afm release. Iterate locally via the
-`[patch."https://github.com/P4suta/afm"]` block at the workspace root,
-following the pattern from `feedback_local_dep_iteration_via_patch`.
+Adopt option 3: depend on afm's library crates via a git dep pinned to
+a specific afm revision. Iterate locally via the
+`[patch."https://github.com/P4suta/afm"]` block at the workspace root.
 
 ## Consequences
 
@@ -51,19 +49,14 @@ Harder:
 ## Alternatives considered
 
 - **Vendor afm in-tree** — rejected. afm and afm-epub develop at
-  different cadences; vendoring would force afm-epub to ship a 200 k+
-  LOC subtree and to merge upstream manually. The diff-budget
-  discipline that justifies vendoring in afm's case (controlling
-  comrak modifications) does not apply here.
-- **Spawn `afm` CLI** — rejected for the EPUB use case. We need to
-  emit XHTML 1.1 strict spine items, not plain HTML5; we want to walk
-  the AST to build the NAV from headings; and we want errors to
-  surface with `miette` spans against the original afm source. All of
-  this is library work, not CLI work.
+  different cadences; vendoring would mean shipping a large subtree and
+  merging upstream by hand for no benefit here.
+- **Spawn `afm` CLI** — rejected. We need library-level access: wrap
+  each rendered chapter as an XHTML spine item, build the NAV from
+  headings, and surface errors with `miette` spans against the afm
+  source. That is library work, not CLI work.
 
 ## References
 
 - afm ADR-0009 (authoring tools / public surface):
   <https://github.com/P4suta/afm/blob/main/docs/adr/0009-authoring-tools-live-in-sibling-repositories.md>
-- `feedback_local_dep_iteration_via_patch` — `[patch.…]` is the
-  iteration knob; the tag itself never moves backwards.

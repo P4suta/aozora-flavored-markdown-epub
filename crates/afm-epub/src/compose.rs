@@ -1,51 +1,21 @@
 //! Phase 3 — synthesise OPF + NAV + the static EPUB scaffolding.
 //!
-//! ## Specifications consumed
+//! Specs consumed:
 //!
-//! - **OCF `META-INF/container.xml`** — [EPUB 3 OCF §3.5.2](https://www.w3.org/TR/epub-33/#sec-container-metainf-container.xml).
-//!   Required attributes: `version="1.0"`, namespace
-//!   `urn:oasis:names:tc:opendocument:xmlns:container`,
-//!   one or more `<rootfile>` entries with `media-type` and `full-path`.
-//! - **OPF Package Document** — [EPUB 3.3 OPF §3](https://www.w3.org/TR/epub-33/#sec-package-doc).
-//!   Required namespace `http://www.idpf.org/2007/opf`,
-//!   `version="3.0"`, `unique-identifier` attribute, `<metadata>`
-//!   carrying `dc:identifier` / `dc:title` / `dc:language` (DCMES §1.1
-//!   `Identifier`/`Title`/`Language`) plus a `<meta property="dcterms:modified">`
-//!   timestamp in `xsd:dateTime` (Z-suffixed UTC, no fractional seconds —
-//!   EPUB 3.3 §3.4.6 explicitly bans `±HH:MM` offsets and `dcterms:W3CDTF`-style
-//!   sub-second forms).
-//! - **Navigation Document** — [EPUB 3.3 §5](https://www.w3.org/TR/epub-33/#sec-nav).
-//!   Single XHTML 5 document, `<nav epub:type="toc">` containing an
-//!   `<ol>`/`<li>` tree. The `epub` namespace prefix must be declared
-//!   on the root `<html>` element.
-//! - **DCMES** — [Dublin Core Metadata Element Set v1.1](https://www.dublincore.org/specifications/dublin-core/dces/).
-//!   `dc:title`, `dc:creator`, `dc:identifier`, `dc:language`.
-//! - **Language tags** — [RFC 5646 (BCP 47) §2.1](https://datatracker.ietf.org/doc/html/rfc5646#section-2.1)
-//!   ABNF: `Language-Tag = langtag / privateuse / grandfathered`,
-//!   `langtag = language ["-" script] ["-" region] *("-" variant) ...`.
-//!   Our validator covers the common shape (2-3 letter primary subtag
-//!   plus 2-8 alphanumeric subtags). Grandfathered and private-use
-//!   tags fall into the same alphanumeric-subtag rule and so are
-//!   accepted in practice. Anything outside that sub-grammar is
-//!   rejected at composition time.
-//! - **XML escaping** — [W3C XML 1.0 (Fifth Edition) §2.4](https://www.w3.org/TR/xml/#syntax)
-//!   handled by `quick_xml::writer::Writer` via its `BytesText::new`
-//!   constructor: `<`, `>`, `&`, `"`, `'` escape exactly once.
+//! - OCF `META-INF/container.xml` — [EPUB 3 OCF §3.5.2](https://www.w3.org/TR/epub-33/#sec-container-metainf-container.xml).
+//! - OPF Package Document — [EPUB 3.3 OPF §3](https://www.w3.org/TR/epub-33/#sec-package-doc).
+//!   `dcterms:modified` is `xsd:dateTime`, Z-suffixed UTC, no fractional
+//!   seconds (EPUB 3.3 §3.4.6 bans offsets and sub-second forms).
+//! - Navigation Document — [EPUB 3.3 §5](https://www.w3.org/TR/epub-33/#sec-nav).
+//! - DCMES — [Dublin Core v1.1](https://www.dublincore.org/specifications/dublin-core/dces/).
+//! - Language tags — [RFC 5646 (BCP 47) §2.1](https://datatracker.ietf.org/doc/html/rfc5646#section-2.1).
+//!   The validator accepts the common shape (2-3 letter primary subtag
+//!   plus 2-8 alphanumeric subtags); anything else is rejected here.
 //!
-//! ## Implementation choice
-//!
-//! All XML is generated through `quick_xml::writer::Writer` rather
-//! than hand-rolled string concatenation. Hand-rolled XML is
-//! convenient for one-off shapes but bites every time a new `dc:*`
-//! tag sneaks in carrying user-supplied bytes; the writer enforces
-//! the escape contract at the `XmlEvent` boundary, making
-//! double-encoding (or forgotten encoding) impossible.
-//!
-//! Metadata validation runs before composition. A missing `dc:title`,
-//! `dc:creator`, or non-BCP-47 `dc:language` is a hard error rather
-//! than a silent malformed package — Apple Books / Kobo / Calibre
-//! reject any of these and we cannot recover from the failure
-//! post-write.
+//! XML is written through `quick_xml::writer::Writer`, never hand-rolled
+//! concatenation, so user-supplied bytes escape exactly once. Metadata
+//! validation runs before composition: a missing `dc:title` / `dc:creator`
+//! or non-BCP-47 `dc:language` is a hard error, not a malformed package.
 
 use std::borrow::Cow;
 use std::io::Cursor;
@@ -310,9 +280,8 @@ fn write_dc<W: std::io::Write>(
     Ok(())
 }
 
-/// One manifest entry — bundled into a struct so the writer call
-/// site reads top-down (`id` → `href` → `media_type` → optional
-/// `properties`) rather than as a positional five-tuple.
+/// One manifest entry, named so call sites read top-down rather than
+/// as a positional tuple.
 #[derive(Debug, Clone, Copy)]
 struct ManifestItem<'a> {
     id: &'a str,

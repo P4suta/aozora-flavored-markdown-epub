@@ -1,4 +1,4 @@
-# Tighter than clippy's defaults — see feedback_minimal_surface_area.
+# Tighter than clippy's defaults.
 too-many-arguments-threshold   = 4
 too-many-lines-threshold       = 80
 cognitive-complexity-threshold = 18
