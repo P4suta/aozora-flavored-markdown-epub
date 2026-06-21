@@ -1,7 +1,7 @@
 //! Error type (`thiserror` + `miette`). Each variant carries enough
 //! context to root-cause without a stack trace (a path for IO, a TOML
 //! span for metadata, the field name for invariant violations) and a
-//! stable diagnostic code `afm_epub::<phase>::<kind>`.
+//! stable diagnostic code `aozora_flavored_markdown_epub::<phase>::<kind>`.
 //!
 //! `Error` is `#[non_exhaustive]`.
 
@@ -18,7 +18,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 #[non_exhaustive]
 pub enum Error {
     #[error("failed to read manuscript root: {path}")]
-    #[diagnostic(code(afm_epub::discover::io))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::discover::io))]
     DiscoverIo {
         path: PathBuf,
         #[source]
@@ -26,7 +26,7 @@ pub enum Error {
     },
 
     #[error("failed to parse book metadata at {path}")]
-    #[diagnostic(code(afm_epub::discover::metadata))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::discover::metadata))]
     MetadataParse {
         path: PathBuf,
         #[source]
@@ -34,19 +34,19 @@ pub enum Error {
     },
 
     #[error("metadata field {field:?} is invalid: {reason}")]
-    #[diagnostic(code(afm_epub::compose::metadata))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::compose::metadata))]
     MetadataInvalid { field: &'static str, reason: String },
 
     #[error("failed to build XML for the EPUB scaffolding: {0}")]
-    #[diagnostic(code(afm_epub::compose::xml))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::compose::xml))]
     XmlBuild(Cow<'static, str>),
 
-    #[error("afm parse error in {path}")]
-    #[diagnostic(code(afm_epub::render::afm))]
-    AfmParse { path: PathBuf, message: String },
+    #[error("render parse error in {path}")]
+    #[diagnostic(code(aozora_flavored_markdown_epub::render::parse))]
+    RenderParse { path: PathBuf, message: String },
 
     #[error("EPUB packaging failed for {path}")]
-    #[diagnostic(code(afm_epub::package::zip))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::package::zip))]
     Package {
         path: PathBuf,
         #[source]
@@ -54,7 +54,7 @@ pub enum Error {
     },
 
     #[error("EPUB packaging I/O error at {path}")]
-    #[diagnostic(code(afm_epub::package::io))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::package::io))]
     PackageIo {
         path: PathBuf,
         #[source]
@@ -62,10 +62,10 @@ pub enum Error {
     },
 
     #[error("source bytes are not valid UTF-8")]
-    #[diagnostic(code(afm_epub::render::utf8))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::render::utf8))]
     Utf8(#[from] std::str::Utf8Error),
 
     #[error("Shift_JIS source could not be decoded")]
-    #[diagnostic(code(afm_epub::render::sjis))]
+    #[diagnostic(code(aozora_flavored_markdown_epub::render::sjis))]
     Sjis(#[from] aozora_encoding::DecodeError),
 }

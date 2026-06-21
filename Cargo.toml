@@ -9,7 +9,7 @@ members  = [
 [workspace.package]
 version       = "0.1.0"
 edition       = "2024"
-rust-version  = "1.95.0"
+rust-version  = "1.96.0"
 license       = "Apache-2.0 OR MIT"
 description   = "EPUB3 generator for Aozora Flavored Markdown (afm)"
 repository    = "https://github.com/P4suta/afm-epub"
@@ -42,11 +42,11 @@ too_many_lines       = "warn"
 multiple_crate_versions = "allow"
 
 [workspace.dependencies]
-# afm-markdown: the single entry point `render_to_string` that turns each
-# manuscript source into HTML. rev is an intentional pin; bump on an afm sync.
-afm-markdown    = { version = "0.4.0", git = "https://github.com/P4suta/afm.git", rev = "bedbec125a3af4452d102393d4acf8223aa7d0a2" }
-# aozora-encoding: SJIS input decoding; afm-markdown does not re-export it.
-aozora-encoding = { version = "0.4.1", git = "https://github.com/P4suta/aozora.git", rev = "a53c632b1d1be4bfcbce7de010ab5b0843e98cc0" }
+# aozora-flavored-markdown: the single entry point `render` that turns each
+# manuscript source into HTML.
+aozora-flavored-markdown = "0.4.1"
+# aozora-encoding: SJIS input decoding; aozora-flavored-markdown does not re-export it.
+aozora-encoding = "0.4.1"
 
 # CLI
 clap      = { version = "4", features = ["derive", "wrap_help"] }
@@ -71,7 +71,3 @@ proptest          = "1"
 [profile.dist]
 inherits = "release"
 lto = "thin"
-
-# Local dev: uncomment to point at a sibling working copy.
-# [patch."https://github.com/P4suta/afm"]
-# afm-markdown = { path = "../afm/crates/afm-markdown" }

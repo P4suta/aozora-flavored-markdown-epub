@@ -34,7 +34,4 @@ deny              = []
 [sources]
 unknown-registry = "deny"
 unknown-git      = "deny"
-allow-git        = [
-  "https://github.com/P4suta/afm",
-  "https://github.com/P4suta/aozora",
-]
+allow-git        = []

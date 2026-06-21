@@ -3,7 +3,7 @@
 # rust-toolchain.toml so the image's installed channel is just the
 # bootstrap.
 
-FROM rust:1.95-bookworm AS dev
+FROM rust:1.96-bookworm AS dev
 
 ENV CARGO_TERM_COLOR=always \
     CARGO_NET_RETRY=10      \

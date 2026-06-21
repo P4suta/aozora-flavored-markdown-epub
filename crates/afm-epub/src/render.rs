@@ -1,12 +1,12 @@
-//! Phase 2 — render afm sources into XHTML spine items.
+//! Phase 2 — render aozora-flavored-markdown sources into XHTML spine items.
 //!
 //! Each source is decoded (UTF-8, or SJIS via
 //! [`aozora_encoding::decode_sjis`] for `.sjis`/`.shift_jis`), rendered
-//! by [`afm_markdown::render_to_string`], and wrapped in an XHTML (HTML5
+//! by [`aozora_flavored_markdown::render`], and wrapped in an XHTML (HTML5
 //! doctype) envelope carrying the manuscript language and a stylesheet
 //! link.
 
-use afm_markdown::{Options, render_to_string};
+use aozora_flavored_markdown::{Options, render};
 
 use crate::discover::{Manuscript, WritingMode};
 use crate::{Error, Result};
@@ -27,11 +27,11 @@ pub struct RenderOutput {
 }
 
 pub fn render_all(manuscript: &Manuscript) -> Result<RenderOutput> {
-    let opts = Options::afm_default();
+    let opts = Options::default();
     let mut items = Vec::with_capacity(manuscript.sources.len());
     for (idx, source) in manuscript.sources.iter().enumerate() {
         let text = decode_source(source)?;
-        let rendered = render_to_string(&text, &opts);
+        let rendered = render(&text, &opts);
         let title = source
             .path
             .file_stem()

@@ -16,8 +16,8 @@ categories    = { workspace = true }
 workspace = true
 
 [dependencies]
-afm-markdown    = { workspace = true }
-aozora-encoding = { workspace = true }
+aozora-flavored-markdown = { workspace = true }
+aozora-encoding          = { workspace = true }
 miette          = { workspace = true }
 thiserror       = { workspace = true }
 serde           = { workspace = true }
