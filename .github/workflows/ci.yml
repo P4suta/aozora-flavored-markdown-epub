@@ -34,11 +34,11 @@ jobs:
         run: docker compose run --rm dev cargo clippy --workspace --all-targets -- -D warnings
       - name: test
         run: docker compose run --rm dev cargo nextest run --workspace
-      # NOTE: coverage gate, example build (afm-epub-cli), and the
-      # epubcheck step are intentionally deferred until the EPUB
-      # writer phases (compose/package) are no longer stubs. afm-epub
-      # is in pre-alpha scaffolding; reinstate them as the
-      # implementation lands.
+      # NOTE: coverage gate, example build (aozora-flavored-markdown-epub-cli),
+      # and the epubcheck step are intentionally deferred until the EPUB
+      # writer phases (compose/package) are no longer stubs.
+      # aozora-flavored-markdown-epub is in pre-alpha scaffolding; reinstate
+      # them as the implementation lands.
 
   typos:
     runs-on: ubuntu-latest

@@ -1,6 +1,6 @@
 # 0001. Consume afm via git tag dep, not as a vendored copy
 
-- Status: accepted
+- Status: superseded by ADR-0003
 - Date: 2026-04-28
 - Deciders: @P4suta
 - Tags: architecture, dependency

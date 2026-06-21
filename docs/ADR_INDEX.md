@@ -6,8 +6,9 @@ never edited — it is *superseded* by a later ADR that links back.
 
 | ADR                                          | Title                                          | Status   |
 | -------------------------------------------- | ---------------------------------------------- | -------- |
-| [0001](./adr/0001-consume-afm-via-git-tag.md) | Consume afm via git tag dep, not a vendored copy | accepted |
+| [0001](./adr/0001-consume-afm-via-git-tag.md) | Consume afm via git tag dep, not a vendored copy | superseded by ADR-0003 |
 | [0002](./adr/0002-docker-only-execution.md)  | Docker-only execution                          | accepted |
+| [0003](./adr/0003-consume-aozora-flavored-markdown-from-crates-io.md) | Consume aozora-flavored-markdown from crates.io | accepted |
 
 ## Authoring a new ADR
 

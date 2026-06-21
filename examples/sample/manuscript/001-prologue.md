@@ -1,6 +1,6 @@
 # 序章
 
-これは afm-epub のサンプル原稿です。
+これは aozora-flavored-markdown-epub のサンプル原稿です。
 
 ｜青梅《おうめ》に向かって走った。
 

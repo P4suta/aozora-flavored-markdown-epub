@@ -7,10 +7,12 @@
 
 ## Context
 
-afm-epub needs a Rust toolchain, afm's git-pulled crates, and the
-Java-based `epubcheck` validator. Installing all three on the host
-invites "works on my machine" failures, especially around epubcheck's
-JRE. Sibling repos (afm, aozora) use the same Docker-only pattern.
+aozora-flavored-markdown-epub needs a Rust toolchain, the
+aozora-flavored-markdown crates (from crates.io), and the Java-based
+`epubcheck` validator. Installing all three on the host invites "works
+on my machine" failures, especially around epubcheck's JRE. Sibling
+repos (aozora-flavored-markdown, aozora) use the same Docker-only
+pattern.
 
 ## Decision
 
@@ -20,7 +22,7 @@ toolchain invocations are forbidden in automation.
 
 The `dev` image bakes in:
 
-- Rust 1.95 + workspace cargo extensions (`cargo-nextest`,
+- Rust 1.96 + workspace cargo extensions (`cargo-nextest`,
   `cargo-llvm-cov`, `cargo-deny`, `cargo-audit`, `sccache`).
 - `typos`, `just`.
 - `epubcheck` (and its JRE).
@@ -53,5 +55,5 @@ Harder:
 
 ## References
 
-- afm ADR-0002:
-  <https://github.com/P4suta/afm/blob/main/docs/adr/0002-docker-only-execution.md>
+- aozora-flavored-markdown ADR-0002:
+  <https://github.com/P4suta/aozora-flavored-markdown/blob/main/docs/adr/0002-docker-only-execution.md>

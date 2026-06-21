@@ -1,4 +1,4 @@
-# lefthook (https://lefthook.dev/) git hooks for afm-epub.
+# lefthook (https://lefthook.dev/) git hooks for aozora-flavored-markdown-epub.
 #
 # Enable after clone:  `just hooks`
 # Disable:             `just hooks-uninstall`
@@ -19,7 +19,7 @@ commit-msg:
 pre-push:
   # Mirror the CI gates that are live today (build = fmt + clippy + test,
   # plus typos via `just lint`), all in the dev container. The coverage
-  # gate in `just ci` is intentionally NOT run here: afm-epub is pre-alpha
+  # gate in `just ci` is intentionally NOT run here: aozora-flavored-markdown-epub is pre-alpha
   # scaffolding and CI defers coverage until the writer phases land, so
   # pre-push stays in lock-step with the green CI surface. Re-add coverage
   # here once `just ci`'s coverage gate is reinstated in CI.

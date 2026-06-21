@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile
       target: dev
-    image: afm-epub-dev
+    image: aozora-flavored-markdown-epub-dev
     init: true
     working_dir: /workspace
     volumes:

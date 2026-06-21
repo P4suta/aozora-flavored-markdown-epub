@@ -6,5 +6,5 @@
 - 二つ目
 - 三つ目
 
-> 引用ブロックも素通り。afm はあくまで CommonMark + GFM の上に
+> 引用ブロックも素通り。Aozora Flavored Markdown はあくまで CommonMark + GFM の上に
 > 青空文庫記法を被せる方針なので、Markdown 表現はすべて温存されます。

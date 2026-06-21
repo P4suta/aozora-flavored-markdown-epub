@@ -1,4 +1,4 @@
-# afm-epub dev image — single-stage, mirrors afm's pattern.
+# aozora-flavored-markdown-epub dev image — single-stage, mirrors Aozora Flavored Markdown's pattern.
 # Pinned base for reproducibility; the rust toolchain is pinned through
 # rust-toolchain.toml so the image's installed channel is just the
 # bootstrap.

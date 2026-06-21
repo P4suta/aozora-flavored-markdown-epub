@@ -1,25 +1,26 @@
-afm-epub — EPUB3 generator for Aozora Flavored Markdown
-Copyright (c) the afm-epub contributors
+aozora-flavored-markdown-epub — EPUB3 generator for Aozora Flavored Markdown
+Copyright (c) the aozora-flavored-markdown-epub contributors
 
 This NOTICE file is a convenience index of third-party material incorporated
-into the afm-epub source repository. It does not replace the individual
+into the aozora-flavored-markdown-epub source repository. It does not replace the individual
 license files and source-level attributions; those remain the authoritative
 record. Unless specified otherwise in one of the sections below, everything
-else in this repository is original afm-epub code and is dual-licensed
+else in this repository is original aozora-flavored-markdown-epub code and is dual-licensed
 under Apache-2.0 OR MIT (see LICENSE-APACHE and LICENSE-MIT).
 
 
 ================================================================================
-1. Sibling project: afm (Apache-2.0 OR MIT)
+1. Sibling project: Aozora Flavored Markdown (Apache-2.0 OR MIT)
 ================================================================================
 
-afm-epub depends on the `afm` library crates (`afm-syntax`,
-`afm-encoding`, `afm-parser`) consumed via git tag dep, to convert
+aozora-flavored-markdown-epub depends on the `aozora-flavored-markdown`
+library crates (`aozora-flavored-markdown`, `aozora-encoding`) consumed
+from crates.io as semver deps, to convert
 Aozora Flavored Markdown sources into the XHTML fragments that EPUB3
-spine items embed. afm itself is dual-licensed under Apache-2.0 OR MIT
+spine items embed. Aozora Flavored Markdown itself is dual-licensed under Apache-2.0 OR MIT
 and ships its own NOTICE file naming the upstream comrak fork and the
 CommonMark / GFM / Aozora Bunko material it incorporates. Refer to
-https://github.com/P4suta/afm/blob/main/NOTICE for the authoritative
+https://github.com/P4suta/aozora-flavored-markdown/blob/main/NOTICE for the authoritative
 chain.
 
 
@@ -35,10 +36,10 @@ Creative Commons Attribution-ShareAlike 4.0 International
 
 
 ================================================================================
-3. afm-epub (Apache-2.0 OR MIT)
+3. aozora-flavored-markdown-epub (Apache-2.0 OR MIT)
 ================================================================================
 
-All original afm-epub source code is dual-licensed under Apache-2.0 OR
+All original aozora-flavored-markdown-epub source code is dual-licensed under Apache-2.0 OR
 MIT at the user's option. See LICENSE-APACHE and LICENSE-MIT for the
-full license texts. By contributing to afm-epub you agree that your
+full license texts. By contributing to aozora-flavored-markdown-epub you agree that your
 contribution is dual-licensed under the same terms (see CONTRIBUTING.md).

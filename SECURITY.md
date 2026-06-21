@@ -2,23 +2,23 @@
 
 ## Reporting a vulnerability
 
-If you discover a security vulnerability in afm-epub — a panic on
-untrusted afm input, a directory traversal in the OPF / NAV writer, an
+If you discover a security vulnerability in aozora-flavored-markdown-epub — a panic on
+untrusted Aozora Flavored Markdown input, a directory traversal in the OPF / NAV writer, an
 unsafe-Rust block introduced by a dependency, or anything with
 exploitative potential — **do not open a public issue**. Instead:
 
 1. Preferred: open a private report via
-   [GitHub Security Advisories](https://github.com/P4suta/afm-epub/security/advisories/new).
+   [GitHub Security Advisories](https://github.com/P4suta/aozora-flavored-markdown-epub/security/advisories/new).
 2. Alternative: email the maintainer at
    `42543015+P4suta@users.noreply.github.com` with the subject
-   `[afm-epub security] <short summary>`.
+   `[aozora-flavored-markdown-epub security] <short summary>`.
 
 Please include:
 
 - The shortest input or reproduction steps that trigger the issue.
-- The afm-epub version, the afm crate version pin, and the Rust
+- The aozora-flavored-markdown-epub version, the aozora-flavored-markdown crate version, and the Rust
   toolchain version.
-- Whether the issue is reachable when converting user-supplied afm.
+- Whether the issue is reachable when converting user-supplied Aozora Flavored Markdown.
 
 ## Response expectations
 
@@ -35,12 +35,12 @@ In scope:
 - HTML-escape regressions in spine XHTML output.
 
 Out of scope:
-- Vulnerabilities in afm itself — please report those at
-  <https://github.com/P4suta/afm/security/advisories/new>.
+- Vulnerabilities in Aozora Flavored Markdown itself — please report those at
+  <https://github.com/P4suta/aozora-flavored-markdown/security/advisories/new>.
 
 ## Supported versions
 
-afm-epub is pre-1.0. Only the `main` branch is supported.
+aozora-flavored-markdown-epub is pre-1.0. Only the `main` branch is supported.
 
 | Version | Supported |
 |---|---|

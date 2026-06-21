@@ -1,4 +1,4 @@
-# afm-epub Justfile
+# aozora-flavored-markdown-epub Justfile
 # Docker-only execution (ADR-0002). 全てのコマンドは
 # `docker compose run --rm dev <…>` を経由する。
 
@@ -27,7 +27,7 @@ coverage:
 
 # example: ローカル fixture から EPUB を生成
 example:
-    {{_dev}} cargo run --release -p afm-epub-cli -- \
+    {{_dev}} cargo run --release -p aozora-flavored-markdown-epub-cli -- \
         build --input examples/sample/manuscript --metadata examples/sample/book.toml --output out/sample.epub
 
 # 生成済み EPUB を epubcheck で検証
