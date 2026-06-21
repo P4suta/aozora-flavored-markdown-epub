@@ -129,9 +129,8 @@ fn is_bcp47_subset(tag: &str) -> bool {
         return false;
     }
     let mut subtags = tag.split('-');
-    let Some(primary) = subtags.next() else {
-        return false;
-    };
+    // `str::split` always yields at least one element, so `next` is `Some`.
+    let primary = subtags.next().unwrap_or_default();
     if primary.len() < 2 || primary.len() > 3 {
         return false;
     }

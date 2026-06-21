@@ -24,3 +24,6 @@ aozora-flavored-markdown-epub = { version = "0.1.0", path = "../aozora-flavored-
 clap      = { workspace = true }
 miette    = { workspace = true }
 anyhow    = { workspace = true }
+
+[dev-dependencies]
+tempfile  = "3"

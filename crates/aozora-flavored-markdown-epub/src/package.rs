@@ -111,3 +111,58 @@ fn write_deflated<W: Write + Seek>(
     })?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::compose::Bundle;
+
+    fn minimal_bundle() -> Bundle {
+        Bundle {
+            mimetype: "application/epub+zip",
+            container: String::new(),
+            package_opf: String::new(),
+            nav_xhtml: String::new(),
+            spine: vec![],
+            assets: vec![],
+        }
+    }
+
+    #[test]
+    fn write_produces_a_nonempty_file() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let out = dir.path().join("book.epub");
+
+        write(&out, &minimal_bundle()).expect("write should succeed");
+
+        assert!(out.exists(), "the .epub file should exist");
+        let len = std::fs::metadata(&out).expect("metadata").len();
+        assert!(len > 0, "the .epub file should be non-empty");
+    }
+
+    #[test]
+    fn write_creates_missing_parent_directories() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let out = dir.path().join("nested/sub/book.epub");
+
+        write(&out, &minimal_bundle()).expect("write should create parents");
+
+        assert!(out.exists(), "the nested .epub file should exist");
+    }
+
+    #[test]
+    fn write_fails_when_parent_is_a_file() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        // Create a regular file, then aim the output *inside* it so that
+        // `create_dir_all` on the parent must fail (NotADirectory).
+        let blocker = dir.path().join("blocker");
+        std::fs::write(&blocker, b"not a directory").expect("write blocker");
+        let out = blocker.join("book.epub");
+
+        let err = write(&out, &minimal_bundle()).expect_err("write should fail");
+        assert!(
+            matches!(err, Error::PackageIo { ref path, .. } if path == &blocker),
+            "expected PackageIo for the parent path, got {err:?}",
+        );
+    }
+}

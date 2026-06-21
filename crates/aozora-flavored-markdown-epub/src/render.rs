@@ -155,4 +155,27 @@ mod tests {
             );
         }
     }
+
+    /// A `.sjis` source is decoded through the `Shift_JIS` branch:
+    /// `[0x82, 0xA0]` is the SJIS encoding of `"あ"`.
+    #[test]
+    fn decode_source_decodes_shift_jis_extension() {
+        let source = crate::discover::SourceFile {
+            path: std::path::PathBuf::from("x.sjis"),
+            bytes: vec![0x82, 0xA0],
+        };
+        let text = decode_source(&source).expect("valid Shift_JIS should decode");
+        assert_eq!(text, "あ");
+    }
+
+    /// A plain `.md` source takes the UTF-8 branch and is decoded verbatim.
+    #[test]
+    fn decode_source_decodes_markdown_as_utf8() {
+        let source = crate::discover::SourceFile {
+            path: std::path::PathBuf::from("chapter.md"),
+            bytes: "あ".as_bytes().to_vec(),
+        };
+        let text = decode_source(&source).expect("valid UTF-8 should decode");
+        assert_eq!(text, "あ");
+    }
 }

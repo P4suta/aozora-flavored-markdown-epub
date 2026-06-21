@@ -135,4 +135,41 @@ mod tests {
         let m = collect(&opts).unwrap();
         assert_eq!(m.sources.len(), 1);
     }
+
+    #[test]
+    fn missing_metadata_file_is_discover_io_not_parse() {
+        let dir = tempfile::tempdir().unwrap();
+        let src = dir.path().join("only.md");
+        std::fs::write(&src, "x").unwrap();
+        let missing = dir.path().join("does-not-exist.toml");
+        let opts = crate::BuildOptions {
+            input: &src,
+            metadata: &missing,
+            output: std::path::Path::new("unused.epub"),
+        };
+        let err = collect(&opts).unwrap_err();
+        assert!(
+            matches!(err, Error::DiscoverIo { ref path, .. } if path == &missing),
+            "a missing metadata file must surface as DiscoverIo, got {err:?}"
+        );
+    }
+
+    #[test]
+    fn malformed_metadata_is_metadata_parse() {
+        let dir = tempfile::tempdir().unwrap();
+        let meta = dir.path().join("book.toml");
+        std::fs::write(&meta, "title = \"unterminated\ncreator =").unwrap();
+        let src = dir.path().join("only.md");
+        std::fs::write(&src, "x").unwrap();
+        let opts = crate::BuildOptions {
+            input: &src,
+            metadata: &meta,
+            output: std::path::Path::new("unused.epub"),
+        };
+        let err = collect(&opts).unwrap_err();
+        assert!(
+            matches!(err, Error::MetadataParse { ref path, .. } if path == &meta),
+            "malformed book.toml must surface as MetadataParse, got {err:?}"
+        );
+    }
 }

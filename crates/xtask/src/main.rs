@@ -103,6 +103,38 @@ mod tests {
         assert_eq!(next_adr_number(dir.path()).unwrap(), 3);
     }
 
+    #[test]
+    fn new_adr_success_and_missing_template() {
+        // Single test that manipulates the process-global cwd to avoid races.
+        let dir = tempdir();
+        let adr_dir = dir.path().join("docs/adr");
+        std::fs::create_dir_all(&adr_dir).unwrap();
+
+        let original = std::env::current_dir().unwrap();
+        std::env::set_current_dir(dir.path()).unwrap();
+
+        // Error case: template absent.
+        let missing = new_adr("my-slug", None);
+
+        // Success case: write the template, then scaffold a new ADR.
+        let template = "# 0000. Template\n- Status: superseded by …\nbody\n";
+        std::fs::write(adr_dir.join("0000-template.md"), template).unwrap();
+        let created = new_adr("my-slug", Some("My Title"));
+
+        std::env::set_current_dir(&original).unwrap();
+
+        assert!(missing.is_err());
+        created.unwrap();
+
+        let dest = adr_dir.join("0001-my-slug.md");
+        assert!(dest.exists());
+        let body = std::fs::read_to_string(&dest).unwrap();
+        assert!(body.contains("# 0001. My Title"));
+        assert!(body.contains("- Status: proposed\n"));
+        assert!(!body.contains("# 0000. Template"));
+        assert!(!body.contains("superseded by"));
+    }
+
     fn tempdir() -> tempfile::TempDir {
         tempfile::tempdir().expect("tempdir")
     }

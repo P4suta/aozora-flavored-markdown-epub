@@ -33,7 +33,8 @@ just validate out/sample.epub # epubcheck the produced file
 - **Rust 2024 edition.** No nightly features.
 - **`#![forbid(unsafe_code)]`** workspace-wide.
 - **TDD**. Failing test first, then implementation; `just coverage`
-  enforces 100% branch coverage.
+  enforces a line-coverage gate (branch coverage needs a nightly
+  toolchain and is tracked separately).
 - **Warnings are errors** (`-D warnings`, `dead_code = "deny"`). The
   only lint allowance is workspace-wide `multiple_crate_versions`, for
   upstream duplicate versions outside our control.
@@ -45,9 +46,9 @@ Enforced by `committed`. Use the standard types (`feat`, `fix`, `docs`,
 
 ## Pull request gates
 
-- `just lint && just test && just coverage` all green.
-- For any output-shape change, an `examples/sample/` golden snapshot
-  is updated and reviewed.
+- `just ci` green: lint + test + coverage + example build + epubcheck.
+- For any output-shape change, the `insta` snapshots (OPF / nav) are
+  reviewed and updated (`INSTA_UPDATE=always` or `cargo insta`).
 - README and any touched ADR are updated in the same PR.
 
 ## Releasing

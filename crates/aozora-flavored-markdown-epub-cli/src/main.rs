@@ -34,7 +34,16 @@ enum Cmd {
 }
 
 fn main() -> miette::Result<()> {
-    let cli = Cli::parse();
+    run(Cli::parse())
+}
+
+/// Dispatch a parsed [`Cli`] to the library.
+///
+/// # Errors
+///
+/// Propagates any [`aozora_flavored_markdown_epub::Error`] raised while
+/// building the EPUB.
+fn run(cli: Cli) -> miette::Result<()> {
     match cli.cmd {
         Cmd::Build {
             input,
@@ -109,5 +118,55 @@ mod tests {
     #[test]
     fn unknown_subcommand_is_rejected() {
         assert!(parse(&["frobnicate"]).is_err());
+    }
+
+    #[test]
+    fn run_builds_an_epub_from_a_manuscript_dir() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        let manuscript = dir.path().join("manuscript");
+        std::fs::create_dir(&manuscript).expect("mkdir");
+        std::fs::write(manuscript.join("001-chapter.md"), "Hello").expect("write md");
+        let metadata = dir.path().join("book.toml");
+        std::fs::write(
+            &metadata,
+            "title = \"T\"\ncreator = \"A\"\nlanguage = \"ja\"\n",
+        )
+        .expect("write toml");
+        let output = dir.path().join("out.epub");
+
+        let cli = parse(&[
+            "build",
+            "--input",
+            manuscript.to_str().expect("utf8 input"),
+            "--metadata",
+            metadata.to_str().expect("utf8 metadata"),
+            "--output",
+            output.to_str().expect("utf8 output"),
+        ])
+        .expect("parses");
+
+        assert!(run(cli).is_ok());
+        assert!(output.exists(), "the .epub output must be written");
+    }
+
+    #[test]
+    fn run_errors_on_missing_metadata() {
+        let dir = tempfile::tempdir().expect("tempdir");
+        std::fs::write(dir.path().join("only.md"), "x").expect("write md");
+        let missing = dir.path().join("does-not-exist.toml");
+        let output = dir.path().join("out.epub");
+
+        let cli = parse(&[
+            "build",
+            "--input",
+            dir.path().join("only.md").to_str().expect("utf8 input"),
+            "--metadata",
+            missing.to_str().expect("utf8 metadata"),
+            "--output",
+            output.to_str().expect("utf8 output"),
+        ])
+        .expect("parses");
+
+        assert!(run(cli).is_err());
     }
 }

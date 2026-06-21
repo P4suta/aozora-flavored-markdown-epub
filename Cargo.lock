@@ -156,6 +156,7 @@ dependencies = [
  "aozora-flavored-markdown-epub",
  "clap",
  "miette",
+ "tempfile",
 ]
 
 [[package]]
