@@ -565,4 +565,44 @@ mod tests {
         assert!(xml.contains("application/oebps-package+xml"));
         assert!(xml.starts_with("<?xml"));
     }
+
+    fn rendered_two_chapters() -> RenderOutput {
+        RenderOutput {
+            items: vec![
+                crate::render::SpineItem {
+                    href: "chapter-001.xhtml".to_owned(),
+                    title: "First".to_owned(),
+                    xhtml: "<placeholder/>".to_owned(),
+                },
+                crate::render::SpineItem {
+                    href: "chapter-002.xhtml".to_owned(),
+                    title: "Second".to_owned(),
+                    xhtml: "<placeholder/>".to_owned(),
+                },
+            ],
+        }
+    }
+
+    #[test]
+    fn package_opf_snapshot() {
+        let meta = dummy_metadata("Snapshot Book", "Snapshot Author", "ja");
+        let now = DateTime::parse_from_rfc3339("2026-01-01T00:00:00Z")
+            .unwrap()
+            .with_timezone(&Utc);
+        let opf = package_opf(
+            &meta,
+            "urn:uuid:00000000-0000-0000-0000-000000000000",
+            &rendered_two_chapters(),
+            now,
+        )
+        .unwrap();
+        insta::assert_snapshot!(opf);
+    }
+
+    #[test]
+    fn nav_xhtml_snapshot() {
+        let meta = dummy_metadata("Snapshot Book", "Snapshot Author", "ja");
+        let nav = nav_xhtml(&meta, &rendered_two_chapters()).unwrap();
+        insta::assert_snapshot!(nav);
+    }
 }

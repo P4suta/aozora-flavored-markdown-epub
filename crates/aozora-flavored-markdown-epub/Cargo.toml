@@ -31,3 +31,5 @@ chrono          = { workspace = true }
 pretty_assertions = { workspace = true }
 insta             = { workspace = true }
 proptest          = { workspace = true }
+tempfile          = "3"
+zip               = { workspace = true }

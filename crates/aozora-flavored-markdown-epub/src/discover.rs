@@ -90,3 +90,49 @@ fn read_source(path: &std::path::Path) -> Result<SourceFile> {
         bytes,
     })
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn book_toml(dir: &std::path::Path) -> std::path::PathBuf {
+        let p = dir.join("book.toml");
+        std::fs::write(&p, "title = \"T\"\ncreator = \"A\"\nlanguage = \"ja\"\n").expect("write");
+        p
+    }
+
+    #[test]
+    fn collects_markdown_sorted_and_ignores_non_md() {
+        let dir = tempfile::tempdir().unwrap();
+        let meta = book_toml(dir.path());
+        let src = dir.path().join("manuscript");
+        std::fs::create_dir(&src).unwrap();
+        std::fs::write(src.join("002-b.md"), "b").unwrap();
+        std::fs::write(src.join("001-a.md"), "a").unwrap();
+        std::fs::write(src.join("notes.txt"), "ignored").unwrap();
+        let opts = crate::BuildOptions {
+            input: &src,
+            metadata: &meta,
+            output: std::path::Path::new("unused.epub"),
+        };
+        let m = collect(&opts).unwrap();
+        assert_eq!(m.sources.len(), 2, "the .txt file must be ignored");
+        assert!(m.sources[0].path.ends_with("001-a.md"));
+        assert!(m.sources[1].path.ends_with("002-b.md"));
+        assert!(matches!(m.metadata.writing_mode, WritingMode::Horizontal));
+    }
+
+    #[test]
+    fn accepts_a_single_file_input() {
+        let dir = tempfile::tempdir().unwrap();
+        let meta = book_toml(dir.path());
+        std::fs::write(dir.path().join("only.md"), "x").unwrap();
+        let opts = crate::BuildOptions {
+            input: &dir.path().join("only.md"),
+            metadata: &meta,
+            output: std::path::Path::new("unused.epub"),
+        };
+        let m = collect(&opts).unwrap();
+        assert_eq!(m.sources.len(), 1);
+    }
+}

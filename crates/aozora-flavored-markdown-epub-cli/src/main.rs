@@ -48,3 +48,66 @@ fn main() -> miette::Result<()> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn parse(args: &[&str]) -> Result<Cli, clap::Error> {
+        Cli::try_parse_from(
+            std::iter::once("aozora-flavored-markdown-epub").chain(args.iter().copied()),
+        )
+    }
+
+    #[test]
+    fn parses_build_with_all_paths() {
+        let cli = parse(&[
+            "build",
+            "--input",
+            "m",
+            "--metadata",
+            "b.toml",
+            "--output",
+            "o.epub",
+        ])
+        .expect("parses");
+        match cli.cmd {
+            Cmd::Build {
+                input,
+                metadata,
+                output,
+            } => {
+                assert_eq!(input, PathBuf::from("m"));
+                assert_eq!(metadata, PathBuf::from("b.toml"));
+                assert_eq!(output, PathBuf::from("o.epub"));
+            },
+        }
+    }
+
+    #[test]
+    fn output_has_a_short_flag() {
+        let cli = parse(&[
+            "build",
+            "--input",
+            "m",
+            "--metadata",
+            "b.toml",
+            "-o",
+            "o.epub",
+        ])
+        .expect("parses");
+        match cli.cmd {
+            Cmd::Build { output, .. } => assert_eq!(output, PathBuf::from("o.epub")),
+        }
+    }
+
+    #[test]
+    fn build_requires_output() {
+        assert!(parse(&["build", "--input", "m", "--metadata", "b.toml"]).is_err());
+    }
+
+    #[test]
+    fn unknown_subcommand_is_rejected() {
+        assert!(parse(&["frobnicate"]).is_err());
+    }
+}

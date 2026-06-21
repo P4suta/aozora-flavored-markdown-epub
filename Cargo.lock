@@ -141,6 +141,7 @@ dependencies = [
  "proptest",
  "quick-xml",
  "serde",
+ "tempfile",
  "thiserror",
  "toml",
  "uuid",
