@@ -6,7 +6,12 @@ use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
 #[derive(Debug, Parser)]
-#[command(name = "aozora-flavored-markdown-epub", version, about, propagate_version = true)]
+#[command(
+    name = "aozora-flavored-markdown-epub",
+    version,
+    about,
+    propagate_version = true
+)]
 struct Cli {
     #[command(subcommand)]
     cmd: Cmd,
